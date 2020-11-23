@@ -1,173 +1,66 @@
 const url = require('url');
 
-exports.addition = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
-  const total=parseInt(obj.x) + parseInt(obj.y);
+exports.help = function(req, res) {
   var response = [
-    {
-      "le résultat de l'adition des nombre est ": "équivalent à "
-    },
-    total
-  ];
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
+     {
+       "message": "Get this help message"
+     }
+   ]
+   res.statusCode = 200;
+   res.setHeader('content-Type', 'Application/json');
+   res.end(JSON.stringify(response))
 }
 
-exports.soustraction = function(req, res,obj) {
+exports.caractereConsecutif = function(req, res,obj) {
   const reqUrl = url.parse(req.url, true)
-  const total=parseInt(obj.x) - parseInt(obj.y);
-  var response = [
-    {
-      "le résultat de la soustraction des nombre est ": "équivalent à "
-    },
-    total
-  ];
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
-
-exports.multiplication = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
-  const total=parseInt(obj.x) * parseInt(obj.y);
-  var response = [
-    {
-      "le résultat de la multiplication des nombre est ": "équivalent à "
-    },
-    total
-  ];
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
-
-exports.division = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
-  const total=parseInt(obj.x) / parseInt(obj.y);
-  var response = [
-    {
-      "le résultat de la division des nombre est ": "équivalent à "
-    },
-    total
-  ];
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
-exports.modulo = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
-  const total=parseInt(obj.x) % parseInt(obj.y);
-  var response = [
-    {
-      "le résultat du modulo des nombre est ": "équivalent à "
-    },
-    total
-  ];
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
-
-exports.factorielle = function(req, res,obj) {
-	
-  const reqUrl = url.parse(req.url, true)
-  var multiplicateur=1;
-  var total=1;
-  var max= parseInt(obj.n);
-  var nouvTotal=1;
-  while(multiplicateur<=max)
-  {
-	  nouvTotal=total*multiplicateur;
-	  total=nouvTotal;
-	  multiplicateur++;
-	}
-	
-  var response = [
-    {
-      "le résultat de la factiorielle est ": "équivalent à "
-    },
-    total
-  ];
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
-
-exports.premier = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
-  var compteur=0;
-  var i=1;
-  const max = parseInt(obj.n);
-  while (i<=max)
-  {
-		if(!(max%i))
-		{
-			compteur++;
-		}
-		i++;
-	}
-  if(compteur==2){
-      var response = [
-		{
-		" le nombre suivant": "est premier "
-		},
-		max
-	];
-    }
-	else{
-  var response = [
-    {
-      " le nombre suivant": " ne fait pas parti des nombres premier"
-    },
-    max
-  ];
-  }
-  res.statusCode = 200;
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
-exports.npremier = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
-  var compteur=0;
-  var nombrePremier=null;
-  var j=1;
-  const maxPremier=parseInt(obj.n);
+  var LongueurRecherche= parseInt(obj.n);
+  var MonString= JSON.stringify(obj.s);
+  //la chaine recu est "chainerecu", non retirons donc les guillemets
+  MonString=MonString.substring(1,MonString.length-1);
+  var PremiereChaine=0;
+  var Compteur=0;
+  var NombreFoisConsecutif=0;
+  var ChaineTrouvee=-1;
+  //cherche le premier caractere
+  var CharRechercher=MonString.charAt(Compteur);
+  const LongueurMax= MonString.length;
+  res.statusCode = 400;
   
-  while(maxPremier!=compteur){
+  while((Compteur<LongueurMax)&&(ChaineTrouvee==-1))
+  {
+	  if(MonString.charAt(Compteur)==CharRechercher)
+	  {
+		  NombreFoisConsecutif++;
+	  }
+	  else
+	  {
+		  CharRechercher=MonString.charAt(Compteur);
+		  PremiereChaine=Compteur;
+		  NombreFoisConsecutif=1;
+	  }
 	  
-  var compteurPremier=0;
-  var i=1;
-  var max = j;
+	  if(NombreFoisConsecutif==LongueurRecherche)
+	  {
+		  ChaineTrouvee=PremiereChaine;
+	  } 
+	  Compteur++;
+  }
   
-
-  while (i<=max)
+  var response = [
     {
-		if(!(max%i))
-		{
-			compteurPremier++;
-		}
-		i++;
-	}
-	
-	if(compteurPremier==2){
-		compteur++;
-		nombrePremier=i-1;
-		}
-	j++;
-	}
-   
-      var response = [
-		{
-		" le nombre suivant": "le nieme nombre premier du chiffre est "
-		},
-		nombrePremier
-	];
+      "message ": "la première chaîne de n charactère consécutive est à la position"
+    },
+    ChaineTrouvee	
+  ];
   
-  res.statusCode = 200;
+  if(PremiereChaine!=-1)
+  {
+	res.statusCode = 200;
+  }
   res.setHeader('content-Type', 'Application/json');
   res.end(JSON.stringify(response))
 }
+
 exports.invalidUrl = function(req, res) {
    var response = [
      {
