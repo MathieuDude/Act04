@@ -11,13 +11,21 @@ module.exports = http.createServer((req, res) => {
     console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
     coursOps.help(req, res);
 	
-  // POST endpoint
+
   } else if(reqUrl.pathname == '/api/ModifString/carConsec' && req.method === 'GET'){
 	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
-    coursOps.caractereConsecutif(req, res,parsed);
+    coursOps.caractereConsecutif(req, res, parsed);
 	
-  // POST endpoint
-	}else {
+  
+  }
+  else if(reqUrl.pathname == '/api/ModifString/caractereConsecutifDebFin' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.caractereConsecutifDebFin(req, res ,parsed);
+	
+  
+  }
+  else {
+    // POST endpoint
     console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
     coursOps.invalidUrl(req, res);
   }

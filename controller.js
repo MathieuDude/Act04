@@ -12,7 +12,7 @@ exports.help = function(req, res) {
 }
 
 exports.caractereConsecutif = function(req, res,obj) {
-  const reqUrl = url.parse(req.url, true)
+  const reqUrl = url.parse(req.url, true);
   var LongueurRecherche= parseInt(obj.n);
   var MonString= JSON.stringify(obj.s);
   //la chaine recu est "chainerecu", non retirons donc les guillemets
@@ -58,8 +58,53 @@ exports.caractereConsecutif = function(req, res,obj) {
 	res.statusCode = 200;
   }
   res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response))
-}
+  res.end(JSON.stringify(response));
+};
+
+exports.caractereConsecutifDebFin = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
+  //received string
+  var MonString= JSON.stringify(obj.s);
+
+  var startPos;
+  var endPos;
+  var startPosSet = false;
+  var startChar;
+
+  MonString = MonString.substring(1,MonString.length-1);
+
+  for (let i = 0; i < MonString.length; i++) {
+    
+    if(MonString[i] == MonString[i+1])
+    {
+      if (!startPosSet) {
+        startChar = MonString[i];
+        startPos=i-1;
+        startPosSet=true;
+      }
+      endPos=i+1;
+    }
+    
+  }
+  var response = [
+    {
+      "message ": "Les caractères consécutifs sont entre: ["+ startPos +","+ endPos +"]"
+    }
+  ];
+  
+  if(startPosSet)
+  {
+	  res.statusCode = 200;
+  }
+  res.setHeader('content-Type', 'Application/json');
+  res.end(JSON.stringify(response));
+
+
+};
+
 
 exports.invalidUrl = function(req, res) {
    var response = [
@@ -70,5 +115,5 @@ exports.invalidUrl = function(req, res) {
    res.statusCode = 404;
    res.setHeader('content-Type', 'Application/json');
    res.end(JSON.stringify(response))
-}
+};
  
