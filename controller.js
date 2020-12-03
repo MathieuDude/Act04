@@ -8,7 +8,7 @@ exports.help = function(req, res) {
    ]
    res.statusCode = 200;
    res.setHeader('content-Type', 'Application/json');
-   res.end(JSON.stringify(response))
+   res.end(JSON.stringify(response));
 }
 
 exports.caractereConsecutif = function(req, res,obj) {
@@ -91,7 +91,7 @@ exports.caractereConsecutifDebFin = function(req, res, obj) {
   }
   var response = [
     {
-      "message ": "Les caractères consécutifs sont entre: ["+ startPos +","+ endPos +"]"
+      "message ": "["+ startPos +","+ endPos +"]"
     }
   ];
   
@@ -99,6 +99,112 @@ exports.caractereConsecutifDebFin = function(req, res, obj) {
   {
 	  res.statusCode = 200;
   }
+  res.setHeader('content-Type', 'Application/json');
+  res.end(JSON.stringify(response));
+
+
+};
+
+exports.inversePhrase = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
+  //received string
+  var MonString= JSON.stringify(obj.s);
+  MonString = MonString.substring(2,MonString.length-2);
+
+  var stringTable = MonString.split(' ');
+  var finalString;
+  var firstLoop = true;
+  
+  //THIS
+  // for (let i = stringTable.length-1; i >= 0; i--) {
+  //   if(firstLoop){
+  //     finalString = stringTable[i];
+  //     firstLoop = false;
+  //   } else{
+  //     finalString = finalString + ' ' + stringTable[i];
+  //   }  
+  // }
+  //VS
+  //THAT
+  stringTable.reverse();
+  finalString = stringTable.join(' ')
+
+  var response = [
+    {
+      "message ": finalString
+    }
+  ];
+  
+  res.statusCode = 200;
+  
+  res.setHeader('content-Type', 'Application/json');
+  res.end(JSON.stringify(response));
+
+
+};
+
+exports.inverseMot = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
+  //received string
+  var MonString= JSON.stringify(obj.s);
+  MonString = MonString.substring(2,MonString.length-2);
+
+  var splitString = MonString.split("");
+  var reverseArray = splitString.reverse(); 
+  var finalString = reverseArray.join("");
+
+  var response = [
+    {
+      "message ": finalString
+    }
+  ];
+  
+  res.statusCode = 200;
+  
+  res.setHeader('content-Type', 'Application/json');
+  res.end(JSON.stringify(response));
+
+
+};
+
+exports.retireCharDebut = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
+  //received string
+  var MonString = JSON.stringify(obj.s);
+  var monChar = JSON.stringify(obj.c);
+  
+  var counter = 0;
+
+  MonString = MonString.substring(2,MonString.length-2);
+  monChar = monChar.substring(2, monChar.length-2);
+
+  var splitString = MonString.split("");
+
+  splitString.forEach(element => {
+    if(element==monChar)
+    {
+      counter++;
+  }});
+
+  var finalString = MonString.substring(counter);
+
+  var response = [
+    {
+      "message ": finalString
+    }
+  ];
+  
+  res.statusCode = 200;
+  
   res.setHeader('content-Type', 'Application/json');
   res.end(JSON.stringify(response));
 
@@ -114,6 +220,6 @@ exports.invalidUrl = function(req, res) {
    ]
    res.statusCode = 404;
    res.setHeader('content-Type', 'Application/json');
-   res.end(JSON.stringify(response))
+   res.end(JSON.stringify(response));
 };
  
