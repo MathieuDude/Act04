@@ -48,6 +48,33 @@ module.exports = http.createServer((req, res) => {
 	
   
   }
+  else if(reqUrl.pathname == '/api/ModifString/retireCharDebutFin' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.retireCharDebutFin(req, res ,parsed);
+	
+  
+  }
+  //censure
+  else if(reqUrl.pathname == '/api/ModifString/censure' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.censure(req, res ,parsed);
+	
+  
+  }
+
+  else if(reqUrl.pathname == '/api/ModifString/ajoutCensure' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.ajoutCensure(req, res ,parsed);
+	
+  
+  }
+
+  else if(reqUrl.pathname == '/api/ModifString/listerMotsCensurer' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.listerMotsCensurer(req, res ,parsed);
+	
+  
+  }
 
   else {
     // POST endpoint
