@@ -274,7 +274,11 @@ exports.retireCharDebut = function(req, res, obj) {
 
 };
 
-
+exports.retireCharFin = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
   MonString = MonString.substring(2,MonString.length-2);
   monChar = monChar.substring(2, monChar.length-2);
   console.log(monChar);
