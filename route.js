@@ -42,6 +42,12 @@ module.exports = http.createServer((req, res) => {
 	
   
   }
+  else if(reqUrl.pathname == '/api/ModifString/retireCharFin' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.retireCharFin(req, res ,parsed);
+	
+  
+  }
 
   else {
     // POST endpoint

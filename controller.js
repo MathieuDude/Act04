@@ -255,6 +255,89 @@ exports.retireCharDebut = function(req, res, obj) {
 
 };
 
+exports.retireCharFin = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
+  //received string
+  var MonString = JSON.stringify(obj.s);
+  var monChar = JSON.stringify(obj.c);
+  
+  var counter = 0;
+
+  MonString = MonString.substring(2,MonString.length-2);
+  monChar = monChar.substring(2, monChar.length-2);
+  console.log(monChar);
+
+  var splitString = MonString.split("");
+
+  var reversed = splitString.reverse();
+
+  reversed.forEach(element => {
+    if(element==monChar)
+    {
+      counter++;
+  }});
+  
+  var finalString = MonString.substring(0,MonString.length-counter);
+
+  var response = [
+    {
+      "message ": finalString
+    }
+  ];
+  
+  res.statusCode = 200;
+  
+  res.setHeader('content-Type', 'Application/json');
+  res.end(JSON.stringify(response));
+
+
+};
+
+exports.retireCharDebutFin = function(req, res, obj) {
+  
+  const reqUrl = url.parse(req.url, true);
+  //base error code that way if a response is sent ahead of time it's an error
+  res.statusCode = 400;
+  //received string
+  var MonString = JSON.stringify(obj.s);
+  var monChar = JSON.stringify(obj.c);
+  
+  var counter = 0;
+
+
+
+  // MonString = MonString.substring(2,MonString.length-2);
+  // monChar = monChar.substring(2, monChar.length-2);
+  // console.log(monChar);
+
+  // var splitString = MonString.split("");
+
+  // var reversed = splitString.reverse();
+
+  // reversed.forEach(element => {
+  //   if(element==monChar)
+  //   {
+  //     counter++;
+  // }});
+  
+  // var finalString = MonString.substring(0,MonString.length-counter);
+
+  var response = [
+    {
+      "message ": finalString
+    }
+  ];
+  
+  res.statusCode = 200;
+  
+  res.setHeader('content-Type', 'Application/json');
+  res.end(JSON.stringify(response));
+
+
+};
 
 exports.invalidUrl = function(req, res) {
    var response = [
