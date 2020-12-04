@@ -41,7 +41,8 @@ exports.caractereConsecutif = function(req, res,obj) {
 	  
 	  if(NombreFoisConsecutif==LongueurRecherche)
 	  {
-		  ChaineTrouvee=PremiereChaine;
+		  //-1 car compteur++ a la fin
+		  ChaineTrouvee=PremiereChaine-1;
 	  } 
 	  Compteur++;
   }
@@ -71,37 +72,77 @@ exports.caractereConsecutifDebFin = function(req, res, obj) {
   res.statusCode = 400;
   //received string
   var MonString= JSON.stringify(obj.s);
-
-  var startPos;
+  var StringPasModif=JSON.stringify(obj.s);
+  var startPos=0;
   var endPos;
   var startPosSet = false;
   var startChar;
-
-  MonString = MonString.substring(1,MonString.length-1);
-
-  for (let i = 0; i < MonString.length; i++) {
-    
-    if(MonString[i] == MonString[i+1])
-    {
-      if (!startPosSet) {
-        startChar = MonString[i];
-        startPos=i-1;
-        startPosSet=true;
-      }
-      endPos=i+1;
-    }
-    
-  }
-  var response = [
-    {
-      "message ": "["+ startPos +","+ endPos +"]"
-    }
-  ];
-  
-  if(startPosSet)
+  var startPosG;
+  var endPosG;
+  var currentLength=0;
+  var maxLength=0;
+  //si la chaine est entouree par des coma
+  if((MonString.length>4)&&(MonString.charAt(1)=="’")&&(MonString.charAt(MonString.length-2)=="’"))
   {
+	MonString = MonString.substring(1,MonString.length-1);
+	res.statusCode = 200;
+	//MonString.replace("%20", " ")
+	  for (let i = 0; i < MonString.length; i++) {
+		
+		if(MonString[i] == MonString[i+1])
+		{
+		  
+			startChar = MonString[i];
+			endPos=i+1;
+			currentLength++;
+			if(currentLength>maxLength)
+			{
+			  maxLength=currentLength;
+			  startPosG=startPos;
+			  endPosG=endPos;
+			}
+		}
+		else if(i==0)
+		{
+		  currentLength=0;
+		  startPosG=0;
+		  endPosG=1;
+		}
+		else
+		{
+		  currentLength=0;
+		  startPos=i;
+		}
+	  }
+  }
+  else if((MonString.charAt(1)=="’")&&(MonString.charAt(MonString.length-2)=="’"))
+  {
+	  //si la chaine est vide
+	  startPosG=0;
+	  endPosG=0;
 	  res.statusCode = 200;
   }
+
+  var response = [
+	{
+      "statuscode": res.statusCode
+    },
+    {
+      "message ": "["+ startPosG +","+ endPosG +"]"
+    },
+	{
+      "message ": MonString.length
+    },
+	{
+      "Pas modif ": StringPasModif
+    },
+	{
+      "Modif ": MonString
+    }
+	
+  ];
+  
+  
   res.setHeader('content-Type', 'Application/json');
   res.end(JSON.stringify(response));
 
