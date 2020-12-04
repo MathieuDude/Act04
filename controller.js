@@ -86,7 +86,6 @@ exports.caractereConsecutifDebFin = function(req, res, obj) {
   {
 	MonString = MonString.substring(1,MonString.length-1);
 	res.statusCode = 200;
-	//MonString.replace("%20", " ")
 	  for (let i = 0; i < MonString.length; i++) {
 		
 		if(MonString[i] == MonString[i+1])
@@ -128,18 +127,8 @@ exports.caractereConsecutifDebFin = function(req, res, obj) {
       "statuscode": res.statusCode
     },
     {
-      "message ": "["+ startPosG +","+ endPosG +"]"
-    },
-	{
-      "message ": MonString.length
-    },
-	{
-      "Pas modif ": StringPasModif
-    },
-	{
-      "Modif ": MonString
-    }
-	
+      "Position ": "["+ startPosG +","+ endPosG +"]"
+    }	
   ];
   
   
@@ -153,37 +142,40 @@ exports.inversePhrase = function(req, res, obj) {
   
   const reqUrl = url.parse(req.url, true);
   //base error code that way if a response is sent ahead of time it's an error
-  res.statusCode = 400;
+  res.statusCode = 200;
+  var finalString;
   //received string
   var MonString= JSON.stringify(obj.s);
-  MonString = MonString.substring(2,MonString.length-2);
-
-  var stringTable = MonString.split(' ');
-  var finalString;
-  var firstLoop = true;
-  
-  //THIS
-  // for (let i = stringTable.length-1; i >= 0; i--) {
-  //   if(firstLoop){
-  //     finalString = stringTable[i];
-  //     firstLoop = false;
-  //   } else{
-  //     finalString = finalString + ' ' + stringTable[i];
-  //   }  
-  // }
-  //VS
-  //THAT
-  stringTable.reverse();
-  finalString = stringTable.join(' ')
-
+  if((MonString.length>4)&&(MonString.charAt(1)=="’")&&(MonString.charAt(MonString.length-2)=="’"))
+  {
+	  MonString = MonString.substring(2,MonString.length-2);
+	  var stringTable = MonString.split(' ');
+	  stringTable.reverse();
+	  finalString = stringTable.join(' ')
+  }
+  else
+  {
+      res.statusCode = 400;
+  }
+	
   var response = [
+	{
+      "statuscode": res.statusCode
+    },
     {
       "message ": finalString
     }
+	,
+    {
+      "longueur ": MonString.length
+    },
+	{
+      "char 1 ": MonString.charAt(1)
+    },
+	{
+      "char 1 ": MonString.charAt(MonString.length-2)
+    }
   ];
-  
-  res.statusCode = 200;
-  
   res.setHeader('content-Type', 'Application/json');
   res.end(JSON.stringify(response));
 
@@ -197,19 +189,46 @@ exports.inverseMot = function(req, res, obj) {
   res.statusCode = 400;
   //received string
   var MonString= JSON.stringify(obj.s);
-  MonString = MonString.substring(2,MonString.length-2);
+  var finalString;
 
-  var splitString = MonString.split("");
-  var reverseArray = splitString.reverse(); 
-  var finalString = reverseArray.join("");
-
+if((MonString.charAt(1)=="’")&&(MonString.charAt(MonString.length-2)=="’"))
+  {
+	  MonString = MonString.substring(2,MonString.length-2);
+  var inversTemp;
+    var answer='';
+    var temp='';
+    for (let i=0; i< MonString.length;i++){
+        if(MonString[i] != ' ')
+		{
+            temp += MonString[i]+"";
+		}
+        else
+		{
+			inversTemp=temp.split('').reverse().join('');
+            answer = answer+ ' ' +inversTemp;
+            temp = '';
+		}
+    
+	}
+	inversTemp=temp.split('').reverse().join('');
+	answer = answer + ' ' +inversTemp;
+	finalString=answer;
+	 res.statusCode = 200;
+	 }
+  else
+  {
+      res.statusCode = 400;
+  }
+	 
   var response = [
+	{
+      "statuscode": res.statusCode
+    },
     {
       "message ": finalString
     }
   ];
-  
-  res.statusCode = 200;
+
   
   res.setHeader('content-Type', 'Application/json');
   res.end(JSON.stringify(response));
@@ -239,7 +258,7 @@ exports.retireCharDebut = function(req, res, obj) {
       counter++;
   }});
 
-  var finalString = MonString.substring(counter-2);
+  var finalString = MonString.substring(counter);
 
   var response = [
     {
@@ -254,182 +273,6 @@ exports.retireCharDebut = function(req, res, obj) {
 
 
 };
-
-exports.retireCharFin = function(req, res, obj) {
-  
-  const reqUrl = url.parse(req.url, true);
-  //base error code that way if a response is sent ahead of time it's an error
-  res.statusCode = 400;
-  //received string
-  var MonString = JSON.stringify(obj.s);
-  var monChar = JSON.stringify(obj.c);
-  
-  var counter = 0;
-
-  MonString = MonString.substring(2,MonString.length-2);
-  monChar = monChar.substring(2, monChar.length-2);
-  console.log(monChar);
-
-  var splitString = MonString.split("");
-
-  var reversed = splitString.reverse();
-
-  reversed.forEach(element => {
-    if(element==monChar)
-    {
-      counter++;
-  }});
-  
-  var finalString = MonString.substring(0,MonString.length-counter);
-
-  var response = [
-    {
-      "message ": finalString
-    }
-  ];
-  
-  res.statusCode = 200;
-  
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response));
-
-
-};
-
-exports.retireCharDebutFin = function(req, res, obj) {
-  
-  const reqUrl = url.parse(req.url, true);
-  //base error code that way if a response is sent ahead of time it's an error
-  res.statusCode = 400;
-  //received string
-  var MonString = JSON.stringify(obj.s);
-  var monChar = JSON.stringify(obj.c);
-  
-  //remove start
-  var counter = 0;
-  var counter2 = 0;
-
-  MonString = MonString.substring(2,MonString.length-2);
-  monChar = monChar.substring(2, monChar.length-2);
-
-  var splitString = MonString.split("");
-
-  splitString.forEach(element => {
-    if(element==monChar)
-    {
-      counter++;
-  }});
-
-  var startGone = MonString.substring(counter-2);
-  console.log(startGone);
-  
-  //remove end
-
-  var splitString2 = startGone.split("");
-
-  var reversed = splitString2.reverse();
-
-  reversed.forEach(element => {
-    if(element==monChar)
-    {
-      counter2++;
-  }});
-  
-  var finalString = startGone.substring(0,startGone.length-counter2);
-
-  var response = [
-    {
-      "message ": finalString
-    }
-  ];
-  
-  res.statusCode = 200;
-  
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response));
-
-
-};
-
-var motsCensurer = ['esti', ];
-
-exports.censure = function(req, res, obj) {
-  
-  const reqUrl = url.parse(req.url, true);
-  //base error code that way if a response is sent ahead of time it's an error
-  res.statusCode = 400;
-  //received string
-  var MonString= JSON.stringify(obj.s);
-
-
-  var finalString = '';
-
-  var response = [
-    {
-      "message ": finalString
-    }
-  ];
-  
-  res.statusCode = 200;
-  
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response));
-
-
-};
-
-exports.ajoutCensure = function(req, res, obj) {
-  
-  const reqUrl = url.parse(req.url, true);
-  //base error code that way if a response is sent ahead of time it's an error
-  res.statusCode = 400;
-  //received string
-  var MonString= JSON.stringify(obj.s);
-
-
-  var finalString = '';
-
-  var response = [
-    {
-      "message ": finalString
-    }
-  ];
-  
-  res.statusCode = 200;
-  
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response));
-
-
-};
-
-exports.listerMotsCensurer = function(req, res, obj) {
-  
-  const reqUrl = url.parse(req.url, true);
-  //base error code that way if a response is sent ahead of time it's an error
-  res.statusCode = 400;
-  //received string
-  var MonString= JSON.stringify(obj.s);
-
-
-  var finalString = '';
-
-  var response = [
-    {
-      "message ": finalString
-    }
-  ];
-  
-  res.statusCode = 200;
-  
-  res.setHeader('content-Type', 'Application/json');
-  res.end(JSON.stringify(response));
-
-
-};
-
-
-
 
 
 exports.invalidUrl = function(req, res) {
