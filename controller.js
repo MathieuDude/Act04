@@ -45,18 +45,21 @@ exports.caractereConsecutif = function(req, res,obj) {
 	  } 
 	  Compteur++;
   }
-  
-  var response = [
-    {
-      "message ": "la première chaîne de n charactère consécutive est à la position"
-    },
-    ChaineTrouvee	
-  ];
-  
-  if(PremiereChaine!=-1)
+  //2 est les '' dans la chaine
+    if((PremiereChaine!=-1)&&(LongueurMax>2)&&(LongueurRecherche>0)&&(obj.n % 1 === 0))
   {
 	res.statusCode = 200;
   }
+  var response = [
+  {
+      "statuscode": res.statusCode
+    },
+    {
+      "Position ": ChaineTrouvee	
+    }	
+  ];
+  
+
   res.setHeader('content-Type', 'Application/json');
   res.end(JSON.stringify(response));
 };
