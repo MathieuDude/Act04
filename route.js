@@ -76,6 +76,19 @@ module.exports = http.createServer((req, res) => {
   
   }
 
+  else if(reqUrl.pathname == '/api/ModifString/supprimerCensure' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.supprimerCensure(req, res ,parsed);
+	
+  
+  }
+  else if(reqUrl.pathname == '/api/ModifString/remplaceBlancEspace' && req.method === 'GET'){
+	  console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
+    coursOps.remplaceBlancEspace(req, res ,parsed);
+	
+  
+  }
+
   else {
     // POST endpoint
     console.log('Request type: ' + req.method + ' Endpoint: ' + req.url);
